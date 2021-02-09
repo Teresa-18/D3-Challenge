@@ -28,12 +28,18 @@
   font-family: sans-serif;
   fill: #fff;
   text-anchor: middle;
-  font-size: 1px;
+  font-size: 3px;
 }
 
 .stateCircle {
   fill: #89bdd3;
   stroke: #e3e3e3;
+  border: 5px solid;
+  color: #e3e3e3;
+}
+
+.stateCircle:hover {
+  color: midnightblue;
 }
 
 .chart {
@@ -50,8 +56,8 @@
   text-align: center;
   text-transform: capitalize;
   background: rgba(0, 0, 0, 0.8);
-  border-radius: 4px;
 }
+
 
 /* Mobile Rules */
 @media screen and (max-width: 530px) {

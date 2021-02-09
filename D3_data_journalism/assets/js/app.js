@@ -130,17 +130,7 @@ d3.csv("/assets/data/data.csv").then(function (SmokerData, err) {
     .classed("stateCircle", true)
     .attr("cx", d => xLinearScale(d[chosenXAxis]))
     .attr("cy", d => yLinearScale(d.obesity))
-    .attr("r", "20");
-
-    chartGroup.selectAll("text")
-        .data(SmokerData)
-        .enter()
-        .append("text")
-        .classed("stateText", true)
-        .text(function (d) {
-          return d.abbr;
-        })
-        .attr("dy", ".35em");
+    .attr("r", "13");
 
   // Create group for two x-axis labels
   var labelsGroup = chartGroup.append("g")
