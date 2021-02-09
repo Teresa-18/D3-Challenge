@@ -49,7 +49,7 @@ function renderAxes(newXScale, xAxis) {
   return xAxis;
 }
 
-// function used for updating x-scale var upon click on axis label
+// function used for updating y-scale var upon click on axis label
 function yScale(SmokerData, chosenYAxis) {
   // create scales
   var yLinearScale = d3.scaleLinear()
@@ -61,7 +61,7 @@ function yScale(SmokerData, chosenYAxis) {
 
 }
 
-// function used for updating xAxis var upon click on axis label
+// function used for updating yAxis var upon click on axis label
 function renderAxes(newYScale, yAxis) {
   var leftAxis = d3.axisLeft(newYScale);
 
@@ -79,6 +79,17 @@ function renderCircles(circlesGroup, newXScale, chosenXAxis) {
   circlesGroup.transition()
     .duration(1000)
     .attr("cx", d => newXScale(d[chosenXAxis]));
+
+  return circlesGroup;
+}
+
+// function used for updating circles group with a transition to
+// new circles
+function renderCircles(circlesGroup, newYScale, chosenYAxis) {
+
+  circlesGroup.transition()
+    .duration(1000)
+    .attr("cy", d => newYScale(d[chosenYAxis]));
 
   return circlesGroup;
 }
@@ -120,8 +131,8 @@ d3.csv("/assets/data/data.csv").then(function (SmokerData, err) {
 
   // parse data
   SmokerData.forEach(function (data) {
-    data.income = +data.income
-    data.obese = +data.obese
+    data.income = +data.income;
+    data.obese = +data.obese;
     data.age = +data.age;
     data.smokes = +data.smokes;
   });
