@@ -107,13 +107,6 @@ function updateToolTip(chosenXAxis, circlesGroup) {
     label = "Household Income:";
   }
 
-  var ylabel;
-  if (chosenYAxis === "Obesity") {
-    ylabel = "Obesity";
-  }
-  else {
-    ylabel = "Smokes";
-  }
 
   var toolTip = d3.tip()
     .attr("class", "tooltip")
@@ -229,7 +222,7 @@ labelsGroup.selectAll("text")
     // replaces chosenXAxis with value
     chosenXAxis = value;
 
-    console.log(chosenXAxis)
+    // console.log(chosenXAxis)
 
     // functions here found above csv import
     // updates x scale for new data
@@ -264,7 +257,7 @@ labelsGroup.selectAll("text")
   }
 });
 
-// x axis labels event listener
+// y axis labels event listener
 chartGroup.selectAll("text")
 .on("click", function() {
   // get value of selection
@@ -274,7 +267,7 @@ chartGroup.selectAll("text")
     // replaces chosenXAxis with value
     chosenYAxis = value;
 
-    console.log(chosenYAxis)
+    // console.log(chosenYAxis)
 
     // functions here found above csv import
     // updates x scale for new data
