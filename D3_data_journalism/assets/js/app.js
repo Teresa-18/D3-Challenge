@@ -63,7 +63,7 @@ function yScale(SmokerData, chosenYAxis) {
 
 // function used for updating xAxis var upon click on axis label
 function renderAxes(newYScale, yAxis) {
-  var leftAxis = d3.axisBottom(newYScale);
+  var leftAxis = d3.axisLeft(newYScale);
 
   yAxis.transition()
     .duration(1000)
