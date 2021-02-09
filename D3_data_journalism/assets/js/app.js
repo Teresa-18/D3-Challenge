@@ -70,10 +70,10 @@ function updateToolTip(chosenXAxis, circlesGroup) {
   }
 
   var toolTip = d3.tip()
-    .attr("class", "tooltip")
+    .attr("class", "d3-tip")
     .offset([80, -60])
     .html(function(d) {
-      return (`${d.state}<br>${label} ${d[chosenXAxis]}`);
+      return (`${d.state}<br>${label} ${d[chosenXAxis]}<br>Obese % ${d.obesity}`);
     });
 
   chartGroup.call(toolTip);
@@ -127,22 +127,20 @@ d3.csv("/assets/data/data.csv").then(function (SmokerData, err) {
     .data(SmokerData)
     .enter()
     .append("circle")
+    .classed("stateCircle", true)
     .attr("cx", d => xLinearScale(d[chosenXAxis]))
     .attr("cy", d => yLinearScale(d.obesity))
-    .attr("r", "20")
-    .attr("fill", "pink")
-    .attr("stroke", "black")
-    .attr("opacity", ".5");
+    .attr("r", "20");
 
     chartGroup.selectAll("text")
-      .data(SmokerData)
-      .enter()
-      .append("text")
-      .text(d => d.abbr)
-      .attr("text-anchor", "middle")
-      .attr("font-size", 6)
-      .attr("dx", -10)
-      .attr("dy", 4);
+        .data(SmokerData)
+        .enter()
+        .append("text")
+        .classed("stateText", true)
+        .text(function (d) {
+          return d.abbr;
+        })
+        .attr("dy", ".35em");
 
   // Create group for two x-axis labels
   var labelsGroup = chartGroup.append("g")
