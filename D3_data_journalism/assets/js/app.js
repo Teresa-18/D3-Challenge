@@ -20,25 +20,117 @@ var svg = d3
   .attr("width", svgWidth)
   .attr("height", svgHeight);
 
+//append an SVG group
 var chartGroup = svg.append("g")
   .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-d3.csv("/assets/data/data.csv").then(function(SmokerData) {
+var chosenXAxis = "smokes";
+
+// function used for updating x-scale var upon click on axis label
+function xScale(SmokerData, chosenXAxis) {
+  // create scales
+  var xLinearScale = d3.scaleLinear()
+    .domain([d3.min(SmokerData, d => d.[chosenXAxis]), 
+      d3.max(SmokerData, d => d[chosenXAxis])])
+    .range([0, width]);
+
+  return xLinearScale;
+
+}
+
+// function used for updating xAxis var upon click on axis label
+function renderAxes(newXScale, xAxis) {
+  var bottomAxis = d3.axisBottom(newXScale);
+
+  xAxis.transition()
+    .duration(1000)
+    .call(bottomAxis);
+
+  return xAxis;
+}
+
+// function used for updating x-scale var upon click on axis label
+function yScale(SmokerData, chosenYAxis) {
+  // create scales
+  var yLinearScale = d3.scaleLinear()
+    .domain([d3.min(SmokerData, d => d.[chosenYAxis]), 
+      d3.max(SmokerData, d => d[chosenYAxis])])
+    .range([height, 0]);
+
+  return yLinearScale;
+
+}
+
+// function used for updating xAxis var upon click on axis label
+function renderAxes(newYScale, yAxis) {
+  var leftAxis = d3.axisBottom(newYScale);
+
+  yAxis.transition()
+    .duration(1000)
+    .call(leftAxis);
+
+  return yAxis;
+}
+
+// function used for updating circles group with a transition to
+// new circles
+function renderCircles(circlesGroup, newXScale, chosenXAxis) {
+
+  circlesGroup.transition()
+    .duration(1000)
+    .attr("cx", d => newXScale(d[chosenXAxis]));
+
+  return circlesGroup;
+}
+
+// // function used for updating circles group with new tooltip
+// function updateToolTip(chosenXAxis, circlesGroup) {
+
+//   var label;
+
+//   if (chosenXAxis === "age") {
+//     label = "Age:";
+//   }
+//   else {
+//     label = "Household Income:";
+//   }
+
+  var toolTip = d3.tip()
+    .attr("class", "tooltip")
+    .offset([80, -60])
+    .html(function(d) {
+      return (`${d.state}<br>${d[chosenYAxis]}<br>${d[chosenXAxis]}`);
+    });
+
+  circlesGroup.call(toolTip);
+
+  circlesGroup.on("mouseover", function(data) {
+    toolTip.show(data);
+  })
+    // onmouseout event
+    .on("mouseout", function(data, index) {
+      toolTip.hide(data);
+    });
+
+  return circlesGroup;
+}
+
+d3.csv("/assets/data/data.csv").then(function (SmokerData, err) {
+  if (err) throw err;
 
   // parse data
-  SmokerData.forEach(function(data) {
+  SmokerData.forEach(function (data) {
+    data.income = +data.income
+    data.obese = +data.obese
     data.age = +data.age;
     data.smokes = +data.smokes;
   });
 
-  // scales
-  var xScale = d3.scaleLinear()
-    .domain(d3.extent(SmokerData, d => d.age))
-    .range([0, width]);
+  // xLinearScale function above csv import
+  var xLinearScale = xScale(SmokerData, chosenXAxis);
 
-  var yScale = d3.scaleLinear()
-    .domain([0, d3.max(SmokerData, d => d.smokes)])
-    .range([height, 0]);
+  // xLinearScale function above csv import
+  var yLinearScale = yScale(SmokerData, chosenYAxis);
 
   // create axes
   var xAxis = d3.axisBottom(xScale);
@@ -52,51 +144,23 @@ d3.csv("/assets/data/data.csv").then(function(SmokerData) {
   chartGroup.append("g")
     .call(yAxis);
 
-  // line generator
-  var line = d3.line()
-  .x(d => xScale(d.age))
-  .y(d => yScale(d.smokes));
 
-  // append line
-  chartGroup.append("path")
-  .data([SmokerData])
-  .attr("d", line)
-  .attr("fill", "none")
-  .attr("stroke", "red");
 
   // append circles
   var circlesGroup = chartGroup.selectAll("circle")
-  .data(SmokerData)
-  .enter()
-  .append("circle")
-  .attr("cx", d => xScale(d.age))
-  .attr("cy", d => yScale(d.smokes))
-  .attr("r", "10")
-  .attr("fill", "gold")
-  .attr("stroke-width", "1")
-  .attr("stroke", "black");
+    .data(SmokerData)
+    .enter()
+    .append("circle")
+    .attr("cx", d => xScale(d.smokes))
+    .attr("cy", d => yScale(d.age))
+    .attr("r", "10")
+    .attr("fill", "pink")
+    .attr("stroke-width", "1")
+    .attr("stroke", "black")
+    .attr("opacity", ".5");
 
-  // Step 1: Initialize Tooltip
-  var toolTip = d3.tip() // method from the d3.tip library not native to d3 
-  .attr("class", "tooltip")
-  .offset([80, -60])
-  .html(function(d) {
-    return (`<strong>${d.age}<strong><hr>${d.smokes}
-    smokers`);
-  });
+ 
 
-  // Step 2: Create the tooltip in chartGroup.
-  chartGroup.call(toolTip);
-
-  // Step 3: Create "mouseover" event listener to display tooltip
-  circlesGroup.on("mouseover", function(d) {
-    toolTip.show(d, this);
-  })
-  // Step 4: Create "mouseout" event listener to hide tooltip
-    .on("mouseout", function(d) {
-      toolTip.hide(d);
-    });
-}).catch(function(error) {
-console.log(error);
+}).catch(function (error) {
+  console.log(error);
 });
-}
