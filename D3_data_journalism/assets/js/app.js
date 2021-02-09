@@ -133,16 +133,18 @@ d3.csv("/assets/data/data.csv").then(function (SmokerData, err) {
   var yLinearScale = yScale(SmokerData, chosenYAxis);
 
   // create axes
-  var xAxis = d3.axisBottom(xScale);
-  var yAxis = d3.axisLeft(yScale);
+  var bottomAxis = d3.axisBottom(xLinearScale);
+  var leftAxis = d3.axisLeft(yLinearScale);
 
-  // append axes
-  chartGroup.append("g")
+  // append x axis
+  var xAxis = chartGroup.append("g")
+    .classed("x-axis", true)
     .attr("transform", `translate(0, ${height})`)
-    .call(xAxis);
+    .call(bottomAxis);
 
+  // append y axis
   chartGroup.append("g")
-    .call(yAxis);
+    .call(leftAxis);
 
 
 
@@ -151,13 +153,19 @@ d3.csv("/assets/data/data.csv").then(function (SmokerData, err) {
     .data(SmokerData)
     .enter()
     .append("circle")
-    .attr("cx", d => xScale(d.smokes))
-    .attr("cy", d => yScale(d.age))
+    .attr("cx", d => xLinearScale(d[chosenXAxis]))
+    .attr("cy", d => yLinearScale(d[chosenYAxis]))
     .attr("r", "10")
     .attr("fill", "pink")
     .attr("stroke-width", "1")
     .attr("stroke", "black")
     .attr("opacity", ".5");
+
+  // Create group for two x-axis labels
+  var labelsGroup = chartGroup.append("g")
+  .attr("transform", `translate(${width / 2}, ${height + 20})`);
+
+  
 
  
 
