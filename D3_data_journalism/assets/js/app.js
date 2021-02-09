@@ -53,8 +53,7 @@ function renderAxes(newXScale, xAxis) {
 function yScale(SmokerData, chosenYAxis) {
   // create scales
   var yLinearScale = d3.scaleLinear()
-    .domain([d3.min(SmokerData, d => d[chosenYAxis]), 
-      d3.max(SmokerData, d => d[chosenYAxis])])
+    .domain([0, d3.max(SmokerData, d => d[chosenYAxis])])
     .range([height, 0]);
 
   return yLinearScale;
@@ -195,16 +194,16 @@ var obesityLabel = chartGroup.append("text")
  .attr("transform", "rotate(-90)")
  .attr("y", 0 - margin.left)
  .attr("x", 0 - (height / 2))
- .attr("dy", "1em")
- .classed("axis-text", true)
+ .attr("value", "obesity")
+ .classed("inactive", true)
  .text("Obese(%)");
 
 var smokesLabel = chartGroup.append("text")
   .attr("transform", "rotate(-90)")
   .attr("y", 0 - margin.left)
   .attr("x", 0 - (height / 2))
-  .attr("dy", "1em")
-  .classed("axis-text", true)
+  .attr("value", "smokes")
+  .classed("inactive", true)
   .text("Smokes(%)");
 
 // updateToolTip function above csv import
