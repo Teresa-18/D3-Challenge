@@ -1,45 +1,57 @@
 // @TODO: YOUR CODE HERE!
-// SVG wrapper dimensions are determined by the current width
-// and height of the browser window.
-var svgWidth = 1200;
-var svgHeight = 660;
+// The code for the chart is wrapped inside a function that
+// automatically resizes the chart
+function makeResponsive() {
 
-var margin = {
-  top: 50,
-  right: 50,
-  bottom: 50,
-  left: 50
-};
+  // if the SVG area isn't empty when the browser loads,
+  // remove it and replace it with a resized version of the chart
+  var svgArea = d3.select("body").select("svg");
 
-var height = svgHeight - margin.top - margin.bottom;
-var width = svgWidth - margin.left - margin.right;
+  // clear svg is not empty
+  if (!svgArea.empty()) {
+    svgArea.remove();
+  }
 
- // Append SVG element
- var svg = d3
- .select(".chart")
- .append("svg")
- .attr("height", svgHeight)
- .attr("width", svgWidth);
+  // SVG wrapper dimensions are determined by the current width and
+  // height of the browser window.
+  var svgWidth = window.innerWidth;
+  var svgHeight = window.innerHeight;
 
+  var margin = {
+    top: 50,
+    bottom: 50,
+    right: 50,
+    left: 50
+  };
+
+  var height = svgHeight - margin.top - margin.bottom;
+  var width = svgWidth - margin.left - margin.right;
+
+  // Append SVG element
+  var svg = d3
+    .select("scatter")
+    .append("svg")
+    .attr("height", svgHeight)
+    .attr("width", svgWidth);
 // Append group element
 var chartGroup = svg.append("g")
  .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
- d3.csv("data.csv").then(function(Data) {
+ d3.csv("data.csv").then(function(SmokerData) {
 
     // parse data
-    Data.forEach(function(data) {
+    SmokerData.forEach(function(data) {
       data.smokes = +data.smokes;
       data.age = +data.age;
     });
 
     // create scales
     var xLinearScale = d3.Scalelinear()
-      .domain(d3.extent(Data, d => d.age))
+      .domain(d3.extent(SmokerData, d => d.age))
       .range([0, width]);
 
     var yLinearScale = d3.scaleLinear()
-      .domain([0, d3.max(Data, d => d.smokes)])
+      .domain([0, d3.max(SmokerData, d => d.smokes)])
       .range([height, 0]);
 
     // create axes
@@ -84,7 +96,7 @@ var chartGroup = svg.append("g")
       .attr("class", "tooltip")
       .offset([80, -60])
       .html(function(d) {
-        return (`<strong>${dateFormatter(d.age)}<strong><hr>${d.smokes}
+        return (`<strong>${d.age}<strong><hr>${d.smokes}
         medal(s) won`);
       });
 
