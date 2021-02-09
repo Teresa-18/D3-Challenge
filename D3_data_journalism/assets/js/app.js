@@ -14,8 +14,8 @@ function makeResponsive() {
 
   // SVG wrapper dimensions are determined by the current width and
   // height of the browser window.
-  var svgWidth = window.innerWidth;
-  var svgHeight = window.innerHeight;
+  var svgWidth = 500;
+  var svgHeight = 500;
 
   var margin = {
     top: 50,
@@ -56,7 +56,7 @@ var chartGroup = svg.append("g")
 
     // create axes
     var xAxis = d3.axisBottom(xLinearScale);
-    var yAxis = d3.axisLeft(yLinearScale).ticks(6);
+    var yAxis = d3.axisLeft(yLinearScale);
 
     // append axes
     chartGroup.append("g")
@@ -80,10 +80,10 @@ var chartGroup = svg.append("g")
 
     // append circles
     var circlesGroup = chartGroup.selectAll("circle")
-      .data(Data)
+      .data(SmokerData)
       .enter()
       .append("circle")
-      .attr("cx", d => xTimeScale(d.age))
+      .attr("cx", d => xLinearScale(d.age))
       .attr("cy", d => yLinearScale(d.smokes))
       .attr("r", "10")
       .attr("fill", "gold")
