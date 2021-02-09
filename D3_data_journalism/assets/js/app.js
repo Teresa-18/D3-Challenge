@@ -132,8 +132,17 @@ d3.csv("/assets/data/data.csv").then(function (SmokerData, err) {
     .attr("r", "20")
     .attr("fill", "pink")
     .attr("stroke", "black")
-    .attr("opacity", ".5")
-    .attr("text", d => d.abbr);
+    .attr("opacity", ".5");
+
+    chartGroup.selectAll("text")
+      .data(SmokerData)
+      .enter()
+      .append("text")
+      .text(d => d.abbr)
+      .attr("text-anchor", "middle")
+      .attr("font-size", 6)
+      .attr("dx", -10)
+      .attr("dy", 4);
 
   // Create group for two x-axis labels
   var labelsGroup = chartGroup.append("g")
