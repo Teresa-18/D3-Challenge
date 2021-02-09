@@ -56,8 +56,8 @@ var chartGroup = svg.append("g")
 
     // line generator
     var line = d3.line()
-      .x(d => xTimeScale(d.date))
-      .y(d => yLinearScale(d.medals));
+      .x(d => xLinearScale(d.age))
+      .y(d => yLinearScale(d.smokes));
 
     // append line
     chartGroup.append("path")
@@ -68,25 +68,23 @@ var chartGroup = svg.append("g")
 
     // append circles
     var circlesGroup = chartGroup.selectAll("circle")
-      .data(medalData)
+      .data(Data)
       .enter()
       .append("circle")
-      .attr("cx", d => xTimeScale(d.date))
-      .attr("cy", d => yLinearScale(d.medals))
+      .attr("cx", d => xTimeScale(d.age))
+      .attr("cy", d => yLinearScale(d.smokes))
       .attr("r", "10")
       .attr("fill", "gold")
       .attr("stroke-width", "1")
       .attr("stroke", "black");
 
-    // Date formatter to display dates nicely
-    var dateFormatter = d3.timeFormat("%d-%b");
 
     // Step 1: Initialize Tooltip
     var toolTip = d3.tip() // method from the d3.tip library not native to d3 
       .attr("class", "tooltip")
       .offset([80, -60])
       .html(function(d) {
-        return (`<strong>${dateFormatter(d.date)}<strong><hr>${d.medals}
+        return (`<strong>${dateFormatter(d.age)}<strong><hr>${d.smokes}
         medal(s) won`);
       });
 
