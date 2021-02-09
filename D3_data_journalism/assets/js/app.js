@@ -1,6 +1,4 @@
 // @TODO: YOUR CODE HERE!
-
-
 var svgWidth = 960;
 var svgHeight = 500;
 
@@ -70,7 +68,7 @@ function updateToolTip(chosenXAxis, circlesGroup) {
   else {
     label = "Household Income:";
   }
-  
+
   var toolTip = d3.tip()
     .attr("class", "tooltip")
     .offset([80, -60])
