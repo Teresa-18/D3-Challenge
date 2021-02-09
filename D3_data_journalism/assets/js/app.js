@@ -25,28 +25,25 @@ var width = svgWidth - margin.left - margin.right;
 var chartGroup = svg.append("g")
  .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
- d3.csv("norway_medals.csv").then(function(medalData) {
-
-    // create date parser
-    var dateParser = d3.timeParse("%d-%b");
+ d3.csv("data.csv").then(function(Data) {
 
     // parse data
-    medalData.forEach(function(data) {
-      data.date = dateParser(data.date);
-      data.medals = +data.medals;
+    Data.forEach(function(data) {
+      data.smokes = +data.smokes;
+      data.age = +data.age;
     });
 
     // create scales
-    var xTimeScale = d3.scaleTime()
-      .domain(d3.extent(medalData, d => d.date))
+    var xLinearScale = d3.Scalelinear()
+      .domain(d3.extent(Data, d => d.age))
       .range([0, width]);
 
     var yLinearScale = d3.scaleLinear()
-      .domain([0, d3.max(medalData, d => d.medals)])
+      .domain([0, d3.max(Data, d => d.smokes)])
       .range([height, 0]);
 
     // create axes
-    var xAxis = d3.axisBottom(xTimeScale).tickFormat(d3.timeFormat("%d-%b"));
+    var xAxis = d3.axisBottom(xLinearScale);
     var yAxis = d3.axisLeft(yLinearScale).ticks(6);
 
     // append axes
@@ -64,7 +61,7 @@ var chartGroup = svg.append("g")
 
     // append line
     chartGroup.append("path")
-      .data([medalData])
+      .data([Data])
       .attr("d", line)
       .attr("fill", "none")
       .attr("stroke", "red");
