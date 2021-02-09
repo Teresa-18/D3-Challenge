@@ -49,6 +49,8 @@ function renderAxes(newXScale, xAxis) {
   return xAxis;
 }
 
+var chosenYAxis = "Obesity";
+
 // function used for updating y-scale var upon click on axis label
 function yScale(SmokerData, chosenYAxis) {
   // create scales
@@ -105,6 +107,14 @@ function updateToolTip(chosenXAxis, circlesGroup) {
     label = "Household Income:";
   }
 
+  var ylabel;
+  if (chosenYAxis === "Obesity") {
+    ylabel = "Obesity";
+  }
+  else {
+    ylabel = "Smokes";
+  }
+
   var toolTip = d3.tip()
     .attr("class", "tooltip")
     .offset([80, -60])
@@ -139,7 +149,7 @@ d3.csv("/assets/data/data.csv").then(function (SmokerData, err) {
   // xLinearScale function above csv import
   var xLinearScale = xScale(SmokerData, chosenXAxis);
 
-  // xLinearScale function above csv import
+  // yLinearScale function above csv import
   var yLinearScale = yScale(SmokerData, chosenYAxis);
 
   // create axes
