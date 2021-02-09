@@ -76,14 +76,14 @@ function updateToolTip(chosenXAxis, circlesGroup) {
       return (`${d.state}<br>${label} ${d[chosenXAxis]}`);
     });
 
-  circlesGroup.call(toolTip);
+  chartGroup.call(toolTip);
 
-  circlesGroup.on("mouseover", function(data) {
-    toolTip.show(data);
+  circlesGroup.on("mouseover", function(d) {
+    toolTip.show(d, this);
   })
     // onmouseout event
-    .on("mouseout", function(data, index) {
-      toolTip.hide(data);
+    .on("mouseout", function(d) {
+      toolTip.hide(d);
     });
 
   return circlesGroup;
@@ -129,10 +129,11 @@ d3.csv("/assets/data/data.csv").then(function (SmokerData, err) {
     .append("circle")
     .attr("cx", d => xLinearScale(d[chosenXAxis]))
     .attr("cy", d => yLinearScale(d.obesity))
-    .attr("r", "10")
+    .attr("r", "20")
     .attr("fill", "pink")
     .attr("stroke", "black")
-    .attr("opacity", ".5");
+    .attr("opacity", ".5")
+    .attr("text", d => d.abbr);
 
   // Create group for two x-axis labels
   var labelsGroup = chartGroup.append("g")
