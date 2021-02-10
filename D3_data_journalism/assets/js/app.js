@@ -133,7 +133,7 @@ d3.csv("/assets/data/data.csv").then(function (SmokerData, err) {
     .attr("cy", d => yLinearScale(d.obesity))
     .attr("r", "13");
 
-  chartGroup.selectAll("text")
+  chartGroup.selectAll()
     .data(SmokerData)
     .enter()
     .append("text")
