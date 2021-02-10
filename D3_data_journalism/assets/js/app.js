@@ -1,6 +1,6 @@
 // @TODO: YOUR CODE HERE!
 var svgWidth = 960;
-var svgHeight = 500;
+var svgHeight = 600;
 
 var margin = {
   top: 20,
@@ -28,7 +28,7 @@ var chosenXAxis = "age";
 function xScale(SmokerData, chosenXAxis) {
   // create scales
   var xLinearScale = d3.scaleLinear()
-    .domain([d3.min(SmokerData, d => d[chosenXAxis]), 
+    .domain([d3.min(SmokerData, d => d[chosenXAxis]-1), 
       d3.max(SmokerData, d => d[chosenXAxis])])
     .range([0, width]);
 
@@ -105,7 +105,8 @@ d3.csv("/assets/data/data.csv").then(function (SmokerData, err) {
 
   // yLinearScale function above csv import
   var yLinearScale = d3.scaleLinear()
-    .domain([0, d3.max(SmokerData, d => d.obesity)])
+    .domain([d3.min(SmokerData, d => d.obesity)-2, 
+      d3.max(SmokerData, d => d.obesity)+2])
     .range([height, 0]);
 
   // create axes
@@ -131,6 +132,16 @@ d3.csv("/assets/data/data.csv").then(function (SmokerData, err) {
     .attr("cx", d => xLinearScale(d[chosenXAxis]))
     .attr("cy", d => yLinearScale(d.obesity))
     .attr("r", "13");
+
+  chartGroup.selectAll("text")
+    .data(SmokerData)
+    .enter()
+    .append("text")
+    .attr("x", d => xLinearScale(d[chosenXAxis]))
+    .attr("y", d => yLinearScale(d.obesity))
+    .classed("stateText", true)
+    .text(d => d.abbr);
+
 
   // Create group for two x-axis labels
   var labelsGroup = chartGroup.append("g")
